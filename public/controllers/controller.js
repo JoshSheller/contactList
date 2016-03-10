@@ -37,6 +37,19 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   	});
   };
 
+  $scope.edit = function(id) {
+  	// log id of user to be edited
+  	console.log('id of user to be removed', id);
+  	// send edited user to server
+  	$http.get('/contactList/' + id).success(function(editedUser) {
+  	  $scope.contact = editedUser;
+  	});
+  };
+
+  $scope.update = function() {
+  	console.log($scope.contact._id);
+  };
+
   // var person1 = {
   // 	name: 'Bob',
   // 	email: 'bob@email.com',

@@ -39,6 +39,14 @@ app.delete('/contactList/:id', function(req, res) {
   });
 });
 
+app.get('/contactList/:id', function(req, res) {
+  var id = req.params.id;
+  console.log(id);
+  db.contactList.findOne({_id: mongojs.ObjectId(id)}, function(err, contact) {
+  	res.json(contact);
+  });
+});
+
   // var person1 = {
   // 	name: 'Bob',
   // 	email: 'bob@email.com',
