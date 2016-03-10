@@ -3,17 +3,38 @@ var myApp = angular.module('myApp', []);
 myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   console.log("Hello world from controller");
 
-  $http.get('/contactList').success(function(response) {
-  	console.log("Data received from get request!");
+  // surround get request with refresh function to update data and clear newly added user data
+  var refresh = function() {
+	$http.get('/contactList').success(function(response) {
+	  console.log("Data received from get request!");
 
-  	$scope.contactList = response;
-  });
+	  $scope.contactList = response;
+	  $scope.contact = '';
+	});
+  };
+
+  // call refresh to get and load this data on page load
+  refresh();
 
   $scope.addContact = function() {
   	console.log($scope.contact);
 
   	// send input data to server
-  	$http.post('/contactList', $scope.contact);
+  	$http.post('/contactList', $scope.contact).success(function(response) {
+  	  console.log('response from server', response);
+  	  // immediately refresh page after adding new contact to load new contact in view instantly
+  	  refresh();
+  	});
+  };
+  
+  // remove user with specified id
+  $scope.remove = function(id) {
+  	// log the id of user to be removed
+  	console.log('id of user to be removed', id);
+  	// send user to be deleted to server --> currently do nothing with removedUser, just refresh page with user removed
+  	$http.delete('/contactList/' + id).success(function(removedUser) {
+  	  refresh();
+  	});
   };
 
   // var person1 = {
