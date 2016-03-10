@@ -34,12 +34,14 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   	// send user to be deleted to server --> currently do nothing with removedUser, just refresh page with user removed
   	$http.delete('/contactList/' + id).success(function(removedUser) {
   	  refresh();
+	  console.log('contact removed -->', removedUser);
   	});
+
   };
 
   $scope.edit = function(id) {
   	// log id of user to be edited
-  	console.log('id of user to be removed', id);
+  	console.log('id of user to be edited', id);
   	// send edited user to server
   	$http.get('/contactList/' + id).success(function(editedUser) {
   	  $scope.contact = editedUser;
@@ -47,7 +49,15 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   };
 
   $scope.update = function() {
-  	console.log($scope.contact._id);
+  	console.log('id of user updated -->', $scope.contact._id);
+  	$http.put('/contactList/' + $scope.contact._id, $scope.contact).success(function(updatedUser) {
+  	  console.log('newly updated user -->', updatedUser);
+  	  refresh();
+  	});
+  };
+
+  $scope.deselect = function() {
+    $scope.contact = '';
   };
 
   // var person1 = {

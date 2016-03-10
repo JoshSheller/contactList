@@ -47,6 +47,15 @@ app.get('/contactList/:id', function(req, res) {
   });
 });
 
+app.put('/contactList/:id', function(req, res) {
+  var id = req.params.id;
+  db.contactList.findAndModify({query: {_id: mongojs.ObjectId(id)},
+  	update: {$set: {name: req.body.name, email: req.body.email, number: req.body.number}},
+  	new: true}, function(err, updatedContact) {
+  	  res.json(updatedContact);
+  	});
+  });
+
   // var person1 = {
   // 	name: 'Bob',
   // 	email: 'bob@email.com',
