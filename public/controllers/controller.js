@@ -9,6 +9,13 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   	$scope.contactList = response;
   });
 
+  $scope.addContact = function() {
+  	console.log($scope.contact);
+
+  	// send input data to server
+  	$http.post('/contactList', $scope.contact);
+  };
+
   // var person1 = {
   // 	name: 'Bob',
   // 	email: 'bob@email.com',
