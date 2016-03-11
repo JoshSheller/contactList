@@ -6,10 +6,16 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   // surround get request with refresh function to update data and clear newly added user data
   var refresh = function() {
 	$http.get('/contactList').success(function(response) {
-	  console.log("Data received from get request!");
+	  console.log("Data received from contactList get request!");
 
 	  $scope.contactList = response;
 	  $scope.contact = '';
+	});
+
+	$http.get('/favs').success(function(response) {
+	  console.log("Data received from favs get request!");
+
+	  $scope.favs = response;
 	});
   };
 
@@ -36,7 +42,6 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   	  refresh();
 	  console.log('contact removed -->', removedUser);
   	});
-
   };
 
   $scope.edit = function(id) {
@@ -58,6 +63,15 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
 
   $scope.deselect = function() {
     $scope.contact = '';
+  };
+
+  $scope.addToFavs = function(id) {
+  	console.log('called addToFavs');
+  	$http.post('/addToFavs/' + id).success(function(contactAddedToFavs) {
+  	  // refresh();
+  	  console.log('user was added to favs -->', contactAddedToFavs);
+  	  refresh();
+  	});
   };
 
   // var person1 = {

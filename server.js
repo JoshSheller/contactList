@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 // require mongo js module
 var mongojs = require('mongojs');
-var db = mongojs('contactList', ['contactList']);
+var db = mongojs('contactList', ['contactList', 'favs']);
 // require ability to parse body response from requests
 var bodyParser = require('body-parser');
 
@@ -12,10 +12,20 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
 app.get('/contactList', function(req, res) {
-  console.log('Get request successful!');
+  console.log('contactList get request successful!');
 
   // find contactList on personal server
   db.contactList.find(function(err, contacts) {
+    console.log('contacts found -->', contacts);
+    res.json(contacts);
+  });
+});
+
+app.get('/favs', function(req, res) {
+  console.log('favs get request successful!');
+
+  // find contactList on personal server
+  db.favs.find(function(err, contacts) {
     console.log('contacts found -->', contacts);
     res.json(contacts);
   });
@@ -54,7 +64,23 @@ app.put('/contactList/:id', function(req, res) {
   	new: true}, function(err, updatedContact) {
   	  res.json(updatedContact);
   	});
+});
+
+app.post('/addToFavs/:id', function(req, res) {
+  var id = req.params.id;
+
+  db.contactList.findOne({_id: mongojs.ObjectId(id)}, function(err, contactToAddToFavs) {
+  	db.favs.insert(contactToAddToFavs, function(err, contactAddedToFavs) {
+  	  res.json(contactAddedToFavs);
+    });
   });
+
+  // console.log(contactToAddToFavs);
+
+  // db.favs.insert({contactToAddToFavs}, function(err, contactAddedToFavs) {
+  // 	res.json(contactAddedToFavs);
+  // });
+});
 
   // var person1 = {
   // 	name: 'Bob',
