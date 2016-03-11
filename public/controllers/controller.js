@@ -1,6 +1,8 @@
+var Contact = require("../models/contact").Contact;
+
 var myApp = angular.module('myApp', []);
 
-myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
+myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) {
   console.log("Hello world from controller");
 
   // surround get request with refresh function to update data and clear newly added user data
@@ -53,6 +55,15 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   	});
   };
 
+  $scope.addToFavs = function(id) {
+  	console.log('called addToFavs');
+  	$http.post('/addToFavs/' + id).success(function(contactAddedToFavs) {
+  	  // refresh();
+  	  console.log('user was added to favs -->', contactAddedToFavs);
+  	  refresh();
+  	});
+  };
+
   $scope.update = function() {
   	console.log('id of user updated -->', $scope.contact._id);
   	$http.put('/contactList/' + $scope.contact._id, $scope.contact).success(function(updatedUser) {
@@ -65,14 +76,24 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.contact = '';
   };
 
-  $scope.addToFavs = function(id) {
-  	console.log('called addToFavs');
-  	$http.post('/addToFavs/' + id).success(function(contactAddedToFavs) {
-  	  // refresh();
-  	  console.log('user was added to favs -->', contactAddedToFavs);
+}]);
+
+myApp.controller('FavsCtrl', ['$scope', '$http', function($scope, $http) {
+  $scope.favNickname = function(id) {
+  	$http.put('/favsNickname', {id: id, nickname: $scope.fav.nickname}).success(function(favWithNickname) {
+  	  console.log('fav with new nickname -->', favWithNickname);
   	  refresh();
   	});
   };
+
+  $scope.removeFav = function(id) {
+  	$http.delete('/favs/' + id).success(function(removedFav) {
+  	  refresh();
+  	  console.log('fav removed -->', removedFav);
+  	});
+  };
+
+}]);
 
   // var person1 = {
   // 	name: 'Bob',
@@ -95,4 +116,3 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
   // var contactList = [person1, person2, person3];
   // $scope.contactList = contactList;
 
-}]);

@@ -6,6 +6,8 @@ var db = mongojs('contactList', ['contactList', 'favs']);
 // require ability to parse body response from requests
 var bodyParser = require('body-parser');
 
+// var Contact = require("./public/models/contact").Contact;
+
 app.use(express.static(__dirname + "/public"));
 
 // give body parsing functionality to app / server
@@ -49,6 +51,15 @@ app.delete('/contactList/:id', function(req, res) {
   });
 });
 
+app.delete('/favs/:id', function(req, res) {
+  var id = req.params.id;
+  console.log('id of fav to be removed');
+
+  db.favs.remove({_id: mongojs.ObjectId(id)}, function(err, removedFav) {
+  	res.json(removedFav);
+  });
+});
+
 app.get('/contactList/:id', function(req, res) {
   var id = req.params.id;
   console.log(id);
@@ -64,6 +75,18 @@ app.put('/contactList/:id', function(req, res) {
   	new: true}, function(err, updatedContact) {
   	  res.json(updatedContact);
   	});
+});
+
+app.put('/favsNickname', function(req, res) {
+  var id = req.body.id;
+  var newNickname = req.body.nickname;
+  console.log('favNickname req', req);
+
+  db.favs.findAndModify({query: {_id: mongojs.ObjectId(id)},
+	update: {$set: {name: newNickname}},
+	new: true}, function(err, updatedFav) {
+	  res.json(updatedFav);
+  });
 });
 
 app.post('/addToFavs/:id', function(req, res) {

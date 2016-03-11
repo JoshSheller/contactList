@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="container" ng-controller="AppCtrl">
+  <div class="container" ng-controller="ContactListCtrl">
     <h1>Contact List App</h1>
 
   <table class="table">
@@ -46,17 +46,27 @@
     </tbody>
   </table>
 
-  <table class="table">
-    <tbody>
-      <!-- display contacts added to favorites -->
-      <h2>Favorites</h2>
-      <tr ng-repeat="fav in favs">
-        <td> {{ fav.name }} </td>
-        <td> {{ fav.email }} </td>
-        <td> {{ fav.number }} </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container" ng-controller="FavsCtrl">
+    <table class="table">
+      <tbody>
+        <!-- display contacts added to favorites -->
+        <h2>Favorites</h2>
+        <tr>
+          <td>
+            <h3>Nickname</h3>
+            <input class="form-control" ng-model="fav.nickname">
+          </td>
+        </tr>
+        <tr ng-repeat="fav in favs">
+          <td> {{ fav.name }} </td>
+          <td> {{ fav.email }} </td>
+          <td> {{ fav.number }} </td>
+          <td><button class="btn btn-danger" ng-click="removeFav(fav._id)">Remove</button>&nbsp; &nbsp;
+          <button class="btn btn-info" ng-click="favNickname(fav._id)">Use Nickname</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   </div>
 
