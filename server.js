@@ -2,11 +2,14 @@ var express = require('express');
 var app = express();
 // require mongo js module
 var mongojs = require('mongojs');
+var mongoose = require('mongoose');
 var db = mongojs('contactList', ['contactList', 'favs']);
 // require ability to parse body response from requests
 var bodyParser = require('body-parser');
 
-// var Contact = require("./public/models/contact").Contact;
+var Contact = require("./public/models/contact").Contact;
+
+mongoose.connect('mongodb://localhost/contactList');
 
 app.use(express.static(__dirname + "/public"));
 
@@ -18,7 +21,7 @@ app.get('/contactList', function(req, res) {
 
   // find contactList on personal server
   db.contactList.find(function(err, contacts) {
-    console.log('contacts found -->', contacts);
+    // console.log('contacts found -->', contacts);
     res.json(contacts);
   });
 });
@@ -28,17 +31,30 @@ app.get('/favs', function(req, res) {
 
   // find contactList on personal server
   db.favs.find(function(err, contacts) {
-    console.log('contacts found -->', contacts);
+    // console.log('contacts found -->', contacts);
     res.json(contacts);
   });
 });
 
 app.post('/contactList', function(req, res) {
+  var newContact = new Contact(req.body);
   console.log(req.body);
   // insert new data into database as well as return data back to controller
+
   db.contactList.insert(req.body, function(err, newContact) {
   	res.json(newContact);
   });
+
+  // Contact.create(newContact, function(err, newContact) {
+  //   console.log('inside post newUser');
+  //   if (err) {
+  //     throw err;
+  //   } else {
+  //     console.log('newContact just added -->', newContact);
+
+  //     res.json(newContact);
+  //   }
+  // });
 });
 
 // use :id to show it is not part of the string but a parameter instead

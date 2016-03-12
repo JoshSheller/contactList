@@ -1,4 +1,4 @@
-var Contact = require("../models/contact").Contact;
+// var Contact = require("../models/contact").Contact;
 
 var myApp = angular.module('myApp', []);
 
@@ -7,25 +7,24 @@ myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) 
 
   // surround get request with refresh function to update data and clear newly added user data
   var refresh = function() {
-	$http.get('/contactList').success(function(response) {
-	  console.log("Data received from contactList get request!");
+  	$http.get('/contactList').success(function(response) {
+      console.log('refresh response', response);
+  	  $scope.contactList = response;
+  	  $scope.contact = '';
+  	});
 
-	  $scope.contactList = response;
-	  $scope.contact = '';
-	});
+  	$http.get('/favs').success(function(response) {
+  	  console.log("Data received from favs get request!");
 
-	$http.get('/favs').success(function(response) {
-	  console.log("Data received from favs get request!");
-
-	  $scope.favs = response;
-	});
+  	  $scope.favs = response;
+  	});
   };
 
   // call refresh to get and load this data on page load
   refresh();
 
   $scope.addContact = function() {
-  	console.log($scope.contact);
+  	console.log('contact to be added -->', $scope.contact);
 
   	// send input data to server
   	$http.post('/contactList', $scope.contact).success(function(response) {
@@ -58,7 +57,7 @@ myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) 
   $scope.addToFavs = function(id) {
   	console.log('called addToFavs');
   	$http.post('/addToFavs/' + id).success(function(contactAddedToFavs) {
-  	  // refresh();
+  	  refresh();
   	  console.log('user was added to favs -->', contactAddedToFavs);
   	  refresh();
   	});
@@ -91,6 +90,22 @@ myApp.controller('FavsCtrl', ['$scope', '$http', function($scope, $http) {
   	  refresh();
   	  console.log('fav removed -->', removedFav);
   	});
+  };
+
+  // surround get request with refresh function to update data and clear newly added user data
+  var refresh = function() {
+    $http.get('/contactList').success(function(response) {
+      console.log("Data received from contactList get request!");
+
+      $scope.contactList = response;
+      $scope.contact = '';
+    });
+
+    $http.get('/favs').success(function(response) {
+      console.log("Data received from favs get request!");
+
+      $scope.favs = response;
+    });
   };
 
 }]);

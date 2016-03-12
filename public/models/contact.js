@@ -1,17 +1,14 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 
 var ContactSchema = new mongoose.Schema({
   name: {
-    type: String,
-    index: true
+    type: String
   },
   email: {
-    type: String,
-    index: true
+    type: String
   },
   number: {
-    type: String,
-    index: true
+    type: String
   }
 });
 
