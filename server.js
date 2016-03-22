@@ -80,12 +80,12 @@ app.delete('/contactList/:id', function(req, res) {
   console.log(id);
   // select user with specified id to be deleted --> return specified contact to controller
   db.contactList.remove({_id: mongojs.ObjectId(id)}, function(err, contact) {
-    if (contact.n) {
+    if (err) {
+      res.statusCode = 404;
+      res.json({});
+    } else {
       res.statusCode = 200;
       res.json(contact);
-    } else {
-      res.statusCode = 404;
-    	res.json({});
     }
   });
 });
@@ -95,12 +95,12 @@ app.delete('/favs/:id', function(req, res) {
   console.log('id of fav to be removed');
 
   db.favs.remove({_id: mongojs.ObjectId(id)}, function(err, removedFav) {
-    if (contact.n) {
+    if (err) {
+      res.statusCode = 404;
+      res.json({});
+    } else {
       res.statusCode = 200;
       res.json(removedFav);
-    } else {
-      res.statusCode = 404;
-    	res.json({});
     }
   });
 });
@@ -139,10 +139,9 @@ app.put('/contactList/:id', function(req, res) {
 app.put('/favsNickname', function(req, res) {
   var id = req.body.id;
   var newNickname = req.body.nickname;
-  console.log('favNickname req', req);
 
   db.favs.findAndModify({query: {_id: mongojs.ObjectId(id)},
-	update: {$set: {name: newNickname}},
+	update: {$set: {nickname: newNickname}},
 	new: true}, function(err, updatedFav) {
     if (err) {
       res.statusCode=500;
