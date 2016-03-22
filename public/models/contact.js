@@ -9,6 +9,9 @@ var ContactSchema = new mongoose.Schema({
   },
   number: {
     type: String
+  },
+  nickname: {
+    type: String
   }
 });
 

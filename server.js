@@ -22,7 +22,13 @@ app.get('/contactList', function(req, res) {
   // find contactList on personal server
   db.contactList.find(function(err, contacts) {
     // console.log('contacts found -->', contacts);
-    res.json(contacts);
+    if (err) {
+      res.statusCode=500;
+      res.json([]);
+    } else {
+      res.statusCode=200;
+      res.json(contacts);
+    }
   });
 });
 
@@ -31,21 +37,32 @@ app.get('/favs', function(req, res) {
 
   // find contactList on personal server
   db.favs.find(function(err, contacts) {
-    // console.log('contacts found -->', contacts);
-    res.json(contacts);
+    if (err) {
+      res.statusCode=500;
+      res.json([]);
+    } else {
+      res.statusCode=200;
+      res.json(contacts);
+    }
   });
 });
 
 app.post('/contactList', function(req, res) {
-  var newContact = new Contact(req.body);
+  // var newContact = new Contact(req.body);
   console.log(req.body);
   // insert new data into database as well as return data back to controller
 
   db.contactList.insert(req.body, function(err, newContact) {
-  	res.json(newContact);
+    if (err) {
+      res.statusCode=500;
+      res.json([]);
+    } else {
+      res.statusCode=201;
+      res.json(newContact);
+    }
   });
 
-  // Contact.create(newContact, function(err, newContact) {
+  // Contact.create(req.body, function(err, newContact) {
   //   console.log('inside post newUser');
   //   if (err) {
   //     throw err;
@@ -63,7 +80,13 @@ app.delete('/contactList/:id', function(req, res) {
   console.log(id);
   // select user with specified id to be deleted --> return specified contact to controller
   db.contactList.remove({_id: mongojs.ObjectId(id)}, function(err, contact) {
-  	res.json(contact);
+    if (contact.n) {
+      res.statusCode = 200;
+      res.json(contact);
+    } else {
+      res.statusCode = 404;
+    	res.json({});
+    }
   });
 });
 
@@ -72,7 +95,13 @@ app.delete('/favs/:id', function(req, res) {
   console.log('id of fav to be removed');
 
   db.favs.remove({_id: mongojs.ObjectId(id)}, function(err, removedFav) {
-  	res.json(removedFav);
+    if (contact.n) {
+      res.statusCode = 200;
+      res.json(removedFav);
+    } else {
+      res.statusCode = 404;
+    	res.json({});
+    }
   });
 });
 
@@ -80,7 +109,15 @@ app.get('/contactList/:id', function(req, res) {
   var id = req.params.id;
   console.log(id);
   db.contactList.findOne({_id: mongojs.ObjectId(id)}, function(err, contact) {
-  	res.json(contact);
+    console.log('error finding contact', err);
+    console.log('contact to be found', contact);
+    if (contact.n) {
+      res.statusCode = 200;
+      res.json(contact);
+    } else {
+      res.statusCode = 404;
+    	res.json({});
+    }
   });
 });
 
@@ -89,7 +126,13 @@ app.put('/contactList/:id', function(req, res) {
   db.contactList.findAndModify({query: {_id: mongojs.ObjectId(id)},
   	update: {$set: {name: req.body.name, email: req.body.email, number: req.body.number}},
   	new: true}, function(err, updatedContact) {
-  	  res.json(updatedContact);
+      if (err) {
+        res.statusCode=500;
+        res.json({});
+      } else {
+        res.statusCode=200;
+        res.json(newContact);
+      }
   	});
 });
 
@@ -101,7 +144,13 @@ app.put('/favsNickname', function(req, res) {
   db.favs.findAndModify({query: {_id: mongojs.ObjectId(id)},
 	update: {$set: {name: newNickname}},
 	new: true}, function(err, updatedFav) {
-	  res.json(updatedFav);
+    if (err) {
+      res.statusCode=500;
+      res.json({});
+    } else {
+      res.statusCode=200;
+      res.json(updatedFav);
+    }
   });
 });
 
@@ -110,7 +159,13 @@ app.post('/addToFavs/:id', function(req, res) {
 
   db.contactList.findOne({_id: mongojs.ObjectId(id)}, function(err, contactToAddToFavs) {
   	db.favs.insert(contactToAddToFavs, function(err, contactAddedToFavs) {
-  	  res.json(contactAddedToFavs);
+      if (err) {
+        res.statusCode=500;
+        res.json([]);
+      } else {
+        res.statusCode=201;
+        res.json(contactAddedToFavs);
+      }
     });
   });
 
