@@ -20,6 +20,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Number</th>
+        <th>Nickname</th>
         <th>Action</th>
         <th>&nbsp;</th>
       </tr>
@@ -29,16 +30,18 @@
         <td><input class="form-control" ng-model="contact.name"></td>
         <td><input class="form-control" ng-model="contact.email"></td>
         <td><input class="form-control" ng-model="contact.number"></td>
+        <td><input class="form-control" ng-model="contact.nickname"></td>
         <td><button class="btn btn-primary" ng-click="addContact()">Add Contact</button></td>
         <td><button class="btn btn-info" ng-click="update()">Update</button>&nbsp; &nbsp;<button class="btn btn-info" ng-click="deselect()">Clear</button></td>
       </tr>
 
       <!-- display all contacts -->
       <tr ng-repeat="contact in contactList">
-        <td> {{ contact.name }} </td>
+        <td> {{ contact.nickname || contact.name }} </td>
         <td> {{ contact.email }} </td>
         <td> {{ contact.number }} </td>
         <!-- button to remove contact by calling ng-click function remove on contact with specified id -->
+        <td></td>
         <td><button class="btn btn-danger" ng-click="remove(contact._id)">Remove</button></td>
         <!-- button to edit contact by calling ng-click function edit contact with specified id -->
         <td><button class="btn btn-warning" ng-click="edit(contact._id)">Edit</button>&nbsp; &nbsp;<button class="btn btn-primary" ng-click="addToFavs(contact._id)">Add To Favs</button></td>
@@ -58,7 +61,7 @@
           </td>
         </tr>
         <tr ng-repeat="fav in favs">
-          <td> {{ fav.name }} </td>
+          <td> {{ fav.nickname }} </td>
           <td> {{ fav.email }} </td>
           <td> {{ fav.number }} </td>
           <td><button class="btn btn-danger" ng-click="removeFav(fav._id)">Remove</button>&nbsp; &nbsp;
