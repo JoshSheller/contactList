@@ -54,18 +54,18 @@
       <tbody>
         <!-- display contacts added to favorites -->
         <h2>Favorites</h2>
-        <tr>
+        <!-- <tr>
           <td>
             <h3>Nickname</h3>
             <input class="form-control" ng-model="fav.nickname">
           </td>
-        </tr>
+        </tr> -->
         <tr ng-repeat="fav in favs">
           <td> {{ fav.nickname }} </td>
           <td> {{ fav.email }} </td>
           <td> {{ fav.number }} </td>
           <td><button class="btn btn-danger" ng-click="removeFav(fav._id)">Remove</button>&nbsp; &nbsp;
-          <button class="btn btn-info" ng-click="favNickname(fav._id)">Use Nickname</button></td>
+          <!-- <button class="btn btn-info" ng-click="favNickname(fav._id)">Use Nickname</button></td> -->
         </tr>
       </tbody>
     </table>

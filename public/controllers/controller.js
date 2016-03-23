@@ -8,7 +8,6 @@ myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) 
   // surround get request with refresh function to update data and clear newly added user data
   var refresh = function() {
   	$http.get('/contactList').success(function(response) {
-      console.log('refresh response', response);
   	  $scope.contactList = response;
   	  $scope.contact = '';
   	}).error(function(error) {
@@ -16,9 +15,16 @@ myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) 
     });
 
   	$http.get('/favs').success(function(response) {
-  	  console.log("Data received from favs get request!");
-
-  	  $scope.favs = response;
+      console.log(response);
+      var favContacts = [];
+      for (var i = 0; i < response.length; i++) {
+        $http.get('/contactList/' + response[i]).success(function(contact) {
+          favContacts.push(contact);
+      	}).error(function(error) {
+          console.log('error editing contact', error);
+        });
+      }
+      $scope.favs = favContacts;
   	}).error(function(error) {
       console.log('error retrieving favs from server', error);
     });
@@ -67,7 +73,6 @@ myApp.controller('ContactListCtrl', ['$scope', '$http', function($scope, $http) 
   $scope.addToFavs = function(id) {
   	console.log('called addToFavs');
   	$http.post('/addToFavs/' + id).success(function(contactAddedToFavs) {
-  	  refresh();
   	  console.log('user was added to favs -->', contactAddedToFavs);
   	  refresh();
   	}).error(function(error) {
@@ -111,24 +116,24 @@ myApp.controller('FavsCtrl', ['$scope', '$http', function($scope, $http) {
   };
 
   // surround get request with refresh function to update data and clear newly added user data
-  var refresh = function() {
-    $http.get('/contactList').success(function(response) {
-      console.log("Data received from contactList get request!");
-
-      $scope.contactList = response;
-      $scope.contact = '';
-    }).error(function(error) {
-      console.log('error retrieving contacts from server', error);
-    });
-
-    $http.get('/favs').success(function(response) {
-      console.log("Data received from favs get request!");
-
-      $scope.favs = response;
-    }).error(function(error) {
-      console.log('error retrieving favs from server', error);
-    });
-  };
+  // var refresh = function() {
+  //   $http.get('/contactList').success(function(response) {
+  //     console.log("Data received from contactList get request!");
+  //
+  //     $scope.contactList = response;
+  //     $scope.contact = '';
+  //   }).error(function(error) {
+  //     console.log('error retrieving contacts from server', error);
+  //   });
+  //
+  //   $http.get('/favs').success(function(response) {
+  //     console.log("Data received from favs get request!");
+  //
+  //     $scope.favs = response;
+  //   }).error(function(error) {
+  //     console.log('error retrieving favs from server', error);
+  //   });
+  // };
 
 }]);
 
